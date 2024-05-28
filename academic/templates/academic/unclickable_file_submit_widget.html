@@ -1,0 +1,6 @@
+{% if widget.value %}
+    <a href="{% url 'academic:download_file' widget.value.instance.pk %}" target="_blank">{{ widget.value.name }}</a>
+    <input type="checkbox" name="clear_file_submit" id="id_clear_file_submit">
+    <label for="id_clear_file_submit">Clear</label><br>
+    Change: <input type="file" name="fileSubmit" id="id_fileSubmit">
+{% endif %}

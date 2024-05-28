@@ -1,0 +1,17 @@
+
+{% extends 'main_app/admin_page.html' %}
+
+
+    {% block content %}
+        
+    <h1>Add Study Year with Sittings</h1>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Study Year Information</h2>
+        {{ study_year_form.as_p }}
+        <h2>School Sittings Information</h2>
+        {{ school_sittings_form.as_p }}
+        <button type="submit" class="btn btn-primary">Start New Year</button>
+    </form>
+
+    {% endblock %}

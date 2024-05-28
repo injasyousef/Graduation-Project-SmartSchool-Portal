@@ -1,0 +1,21 @@
+{% extends 'main_app/admin_page.html' %}
+
+{% block content %}
+    <h1 class="mb-4">List of Students</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Full Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td><a href="{% url 'health_and_behavioral:admin_behavioral_recordIII' student.studentID %}">{{ student.fullName }}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block content %}
+
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">User Profile</h1>
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ student.parentEmail }}</p>
+                    <hr>
+                    <h2 class="mt-4 mb-3">Parent Information</h2>
+                    <p><strong>Full Name:</strong> {{ student.parentFullName }}</p>
+                    <p><strong>Identification Number:</strong> {{ student.parentIdentificationNumber }}</p>
+                    <p><strong>Job:</strong> {{ student.parentJob }}</p>
+                    <p><strong>City:</strong> {{ student.parentCity }}</p>
+                    <p><strong>Address:</strong> {{ student.parentAddress }}</p>
+                    <p><strong>Parent Phone:</strong> {{ student.parentPhone }}</p>
+                </div>
+            </div>
+            <a href="{% url 'users:parent_view_settings' %}" class="btn btn-secondary mt-4">Back to Settings</a>
+
+{% endblock %}

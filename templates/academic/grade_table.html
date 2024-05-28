@@ -1,0 +1,25 @@
+<!-- templates/academic/insert_grades.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Grades</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Insert Grades</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Insert Grade</button>
+    </form>
+
+    <script>
+    $(document).ready(function() {
+        // Add your AJAX code here to dynamically populate dropdowns based on user selections
+    });
+    </script>
+</body>
+</html>

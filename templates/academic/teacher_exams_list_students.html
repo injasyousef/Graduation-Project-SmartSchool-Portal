@@ -1,0 +1,37 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 mb-4">Students For {{ class.className }} Class/Section {{ section.sectionSymbol }} In {{ subject.name }} Subject:</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Student FullName</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'academic:exams_for_student' student.studentID year.yearID class.classID section.sectionID subject.subjectID %}" class="text-decoration-none">
+                                        {{ student.fullName }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'academic:teacher_exams_new_exam' year.yearID class.classID section.sectionID subject.subjectID %}" class="btn btn-primary">Add New Exam For The Section</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

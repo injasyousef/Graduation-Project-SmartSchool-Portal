@@ -1,0 +1,10 @@
+{% extends 'main_app/admin_page.html' %}
+{% load static %}
+{% block content %}
+<h1>Select an Employee</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Select Employee</button>
+</form>
+{% endblock %}

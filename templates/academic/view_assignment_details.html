@@ -1,0 +1,54 @@
+{% extends 'main_app/student_page.html' %}
+{% block content %}
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Assignment Submission</h1>
+      </div>
+      <div class="card-body">
+        <h3 class="card-subtitle mb-3">{{ assignment.title }}</h3>
+        <h4 class="card-text mb-3">{{ assignment.description }}</h4>
+
+        <div class="mb-3">
+          <label class="form-label">File:</label>
+          <a href="{% url 'academic:download_fileI' assignment.assignmentID %}" target="_blank">{{ assignment.fileInsert.name }}</a>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Link:</label>
+          <a href="{{ assignment.linkInsert }}" target="_blank">{{ assignment.linkInsert }}</a>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+          {% csrf_token %}
+
+          <!-- Add other form fields here -->
+          {{ form.as_p }}
+
+          {% if not form.instance.fileSubmit %}
+            {% if flag %}
+              <div class="mb-3">
+                <label for="id_fileSubmit" class="form-label">File Submit:</label>
+                <input type="file" name="fileSubmit" id="id_fileSubmit" class="form-control">
+              </div>
+            {% endif %}
+          {% endif %}
+
+          <div class="mb-3">
+            {% if assignment.submit %}
+              <p class="text-success">Submission status: Submitted</p>
+            {% else %}
+              <p class="text-danger">Submission status: Not submitted</p>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            {% if not flag %}
+              <button type="submit" class="btn btn-primary" disabled>Submit</button>
+            {% else %}
+              <button type="submit" class="btn btn-primary">Submit</button>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}

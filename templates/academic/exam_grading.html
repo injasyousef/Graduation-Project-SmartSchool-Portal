@@ -1,0 +1,14 @@
+
+{% extends 'main_app/teacher_page.html' %}
+
+
+{% block content %}
+    <h1>Grading {{ exam.title }} for {{ exam.student.fullName }}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Grade</button>
+    </form>
+    
+{% endblock %}

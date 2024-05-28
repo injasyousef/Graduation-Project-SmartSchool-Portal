@@ -1,0 +1,91 @@
+<!-- main_app/student_page.html -->
+
+{% extends 'main_app/home_page.html' %}
+
+{% block title %}Student Profile{% endblock %}
+
+{% block links %} 
+    <a class="dropdown-item" href="{% url 'users:view_settings' %}">My Account</a>
+    <a class="dropdown-item" href="{% url 'communication:send_message' %}">New Message</a>
+    <a class="dropdown-item" href="{% url 'communication:view_messages' %}">My Messages</a>
+{% endblock %}
+
+{% block options %}
+    <!-- Student-specific options go here -->
+    
+    <li class="nav-item">
+        <a href="{% url 'communication:student_view_adv' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Adverstiments</span>
+        </a>
+    </li>
+    
+    <br>
+
+    <li class="nav-item">
+        <a href="{% url 'academic:base_view_grades' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Grades</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:view_attendance' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Attendance</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:view_health_records' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Health Records History</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:view_behaviour_evaluation' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Behaviour Evaluations History</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:see_assignments' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Assignments</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:view_exams' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Exams</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:view_weekly_schedule' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Weekly Schedule</span>
+        </a>
+    </li>
+    
+    <br>
+
+    <li class="nav-item">
+        <a href="{% url 'finance:view_fees' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Fees</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    
+
+{% endblock %}
+

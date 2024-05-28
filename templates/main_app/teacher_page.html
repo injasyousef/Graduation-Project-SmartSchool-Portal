@@ -1,0 +1,58 @@
+<!-- main_app/student_page.html -->
+
+{% extends 'main_app/home_page.html' %}
+
+{% block title %}Teacher Profile{% endblock %}
+
+{% block links %} 
+    <a class="dropdown-item" href="{% url 'users:teacher_view_settings' %}">My Account</a>
+    <a class="dropdown-item" href="{% url 'communication:teacher_send_message' %}">New Message</a>
+    <a class="dropdown-item" href="{% url 'communication:teacher_view_messages' %}">My Messages</a>
+{% endblock %}
+
+
+{% block options %}
+    
+    <li class="nav-item">
+        <a href="{% url 'communication:teacher_view_adv' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Adverstiments</span>
+        </a>
+    </li>
+    
+    <br>
+
+    <li class="nav-item">
+        <a href="{% url 'academic:teacher_insert_grades2' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Insert Grades</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:teacher_new_assignment' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Assignment</span>
+        </a>
+    </li>
+    
+    <br>
+    
+     <li class="nav-item">
+        <a href="{% url 'academic:teacher_view_assignments' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Assignments</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:teacher_exams' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Exams</span>
+        </a>
+    </li>
+    
+    <br>
+    
+
+{% endblock %}
+

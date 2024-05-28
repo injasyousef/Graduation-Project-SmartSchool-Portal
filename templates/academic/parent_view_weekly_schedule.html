@@ -1,0 +1,44 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Your Child Weekly Schedule</h1>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Time/Day</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for hour1 in schedule_hours %}
+            <tr>
+              <td>{{ hour1.hour }}:{{ hour1.minutes }}</td>
+              {% for day in days %}
+                {% with lecture_found=False %}
+                  {% for lecture in lectures %}
+                    {% if lecture.day == day and lecture.startTime.hour == hour1.hour %}
+                      <td><a href="{% url 'academic:parent_view_lecture_details' lecture.lectureID %}">{{ lecture.subjectID.name }}</a></td>
+                      {% with lecture_found=True %}
+                      {% endwith %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if not lecture_found %}
+                    <td>Break</td>
+                  {% endif %}
+                {% endwith %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}
+{% block innerContent %}{% endblock %}

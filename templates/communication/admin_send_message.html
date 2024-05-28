@@ -1,0 +1,100 @@
+
+{% extends 'main_app/admin_page.html' %}
+{% load static %}
+    {% block another %} <script src={% static 'js/jquery.min.js' %}></script> {% endblock %}
+
+    {% block content %}
+    <h2>Send Message to Students</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="submit_student" class="btn btn-primary">Send Message to Students</button>
+    </form>
+    <br>
+    <h2>Send Message to Employee</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ employee_form.as_p }}
+        <button type="submit" name="submit_employee" class="btn btn-primary">Send Message to Employee</button>
+    </form>
+    <br>    
+    <h2>Sent Message for All System Users</h2>
+    <a href="{% url 'communication:admin_send_message_users' %}" class="btn btn-primary">Sent Message to all Users</a>   
+<script>
+$(document).ready(function() {
+    // When the year changes
+    $('#id_year').change(function() {
+        var yearId = $(this).val(); // Get the selected year
+
+        // AJAX call to get classes for the selected year
+        $.ajax({
+            url: "{% url 'academic:ajax-get-classes-for-year' %}",
+            data: {'year_id': yearId},
+            success: function(classes) {
+    var classSelect = $('#id_school_class');
+    classSelect.empty().append('<option value="">Select a class...</option>');
+    $.each(classes, function(index, item) {
+        // Ensure item.id is the object ID, and item.name is the textual representation
+        classSelect.append(`<option value="${item.id}">${item.name}</option>`);
+    });
+}
+        });
+
+        // Clear previous selections
+        $('#id_section').empty().append('<option value="">Select a class first...</option>');
+        $('#id_subject').empty().append('<option value="">Select a section first...</option>');
+    });
+
+    // When the class changes
+    $('#id_school_class').change(function() {
+        var url = "{% url 'academic:ajax-get-sections-for-class-and-year' %}";
+        var yearId = $('#id_year').val(); // Get the selected year
+        var classId = $(this).val(); // Get the selected class
+
+        // AJAX call to get sections for the selected class and year
+        $.ajax({
+            url: url,
+            data: {
+                'year_id': yearId,
+                'class_id': classId
+            },
+            success: function(sections) {
+                var sectionSelect = $('#id_section');
+                sectionSelect.empty().append('<option value="">Select a section...</option>');
+                $.each(sections, function(index, item) {
+                    sectionSelect.append(`<option value="${item.id}">${item.symbol}</option>`);
+                });
+            }
+        });
+
+        // Clear previous selection
+        $('#id_subject').empty().append('<option value="">Select a section first...</option>');
+    });
+
+    // When the section changes
+    $('#id_section').change(function() {
+        var url = "{% url 'academic:ajax-get-subjects-for-section' %}";
+        var yearId = $('#id_year').val(); // Again, capture the selected year, though it may not be needed for all models
+        var classId = $('#id_school_class').val(); // Capture the selected class
+        var sectionId = $(this).val(); // Get the selected section
+
+        // AJAX call to get subjects for the selected section (and potentially class and year)
+        $.ajax({
+            url: url,
+            data: {
+                'year_id': yearId,
+                'class_id': classId,
+                'section_id': sectionId
+            },
+            success: function(subjects) {
+                var subjectSelect = $('#id_subject');
+                subjectSelect.empty().append('<option value="">Select a subject...</option>');
+                $.each(subjects, function(index, item) {
+                    subjectSelect.append(`<option value="${item.id}">${item.name}</option>`);
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

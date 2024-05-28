@@ -1,0 +1,87 @@
+{% extends 'main_app/home_page.html' %}
+
+{% block title %}Parent Profile{% endblock %}
+
+{% block links %} 
+    <a class="dropdown-item" href="{% url 'users:parent_view_settings' %}">My Account</a>
+    <a class="dropdown-item" href="{% url 'communication:parent_view_messages' %}">Child Messages</a>
+{% endblock %}
+
+{% block options %}
+    
+    <li class="nav-item">
+        <a href="{% url 'communication:parent_view_adv' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Adverstiments</span>
+        </a>
+    </li>
+    
+    <br>
+
+    <li class="nav-item">
+        <a href="{% url 'academic:parent_view_grades' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Grades</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:parent_view_attendance' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Attendance</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:parent_view_health_records' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Health Records History</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:parent_view_behaviour_evaluation' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Behaviour Evaluations History</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:parent_view_assignments' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Assignments</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:parent_view_exams' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Exams</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    <li class="nav-item">
+        <a href="{% url 'academic:parent_view_weekly_schedule' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Weekly Schedule</span>
+        </a>
+    </li>
+    
+    <br>
+
+    <li class="nav-item">
+        <a href="{% url 'finance:parent_view_fees' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">View Fees</span>
+        </a>
+    </li>
+    
+    <br>
+    
+    
+
+{% endblock %}
+

@@ -1,0 +1,50 @@
+{% extends 'main_app/student_page.html' %}
+
+{% block title %}View Attendance{% endblock %}
+
+{% block content %}
+        <!-- Filter Form -->
+        <form method="post" action="{% url 'academic:view_attendance' %}" class="form-inline mb-4">
+            {% csrf_token %}
+            <div class="form-group mr-2">
+                {{ form_year.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Filter by Year</button>
+        </form>
+
+        {% block content_attendance %}
+            <h2 class="mb-4">All Attendance for All Years</h2>
+            <div class="table-responsive">
+                {% if attendance_history %}
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Year</th>
+                                <th>Class</th>
+                                <th>Section</th>
+                                <th>Date</th>
+                                <th>Reason</th>
+                                <th>Excuse</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in attendance_history %}
+                                <tr>
+                                    <td>{{ attendance.year }}</td>
+                                    <td>{{ attendance.school_class.className }}</td>
+                                    <td>{{ attendance.section.sectionSymbol }}</td>
+                                    <td>{{ attendance.date }}</td>
+                                    <td>{{ attendance.reason }}</td>
+                                    <td>{{ attendance.excuse }}</td>
+                                    <td>{{ attendance.notes }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-info">No attendance available.</div>
+                {% endif %}
+            </div>
+        {% endblock %}
+{% endblock %}

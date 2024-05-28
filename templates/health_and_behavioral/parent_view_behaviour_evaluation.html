@@ -1,0 +1,48 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block title %}View Behaviour Evaluations{% endblock %}
+
+{% block content %}
+        <!-- Filter Form -->
+        <form method="post" action="{% url 'health_and_behavioral:parent_view_behaviour_evaluation' %}" class="form-inline mb-4">
+            {% csrf_token %}
+            <div class="form-group mr-2">
+                {{ form_year.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Filter by Year</button>
+        </form>
+
+        {% block content_behaviour_evaluation %}
+            <h2 class="mb-4">All Behaviour Evaluations for All Years</h2>
+            <div class="table-responsive">
+                {% if behaviour_evaluations %}
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Year</th>
+                                <th>Class</th>
+                                <th>Section</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evaluation in behaviour_evaluations %}
+                                <tr>
+                                    <td>{{ evaluation.year }}</td>
+                                    <td>{{ evaluation.school_class.className }}</td>
+                                    <td>{{ evaluation.section.sectionSymbol }}</td>
+                                    <td>{{ evaluation.action }}</td>
+                                    <td>{{ evaluation.date }}</td>
+                                    <td>{{ evaluation.description }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-info">No behaviour evaluations available.</div>
+                {% endif %}
+            </div>
+        {% endblock %}
+{% endblock %}

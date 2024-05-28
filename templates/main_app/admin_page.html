@@ -1,0 +1,100 @@
+
+{% extends 'main_app/home_page.html' %}
+
+{% block title %}Admin Profile{% endblock %}
+
+{% block links %} 
+    <a class="dropdown-item" href="{% url 'users:admin_view_settings' %}">My Account</a>
+    <a class="dropdown-item" href="{% url 'communication:admin_send_message' %}">New Message</a>
+    <a class="dropdown-item" href="{% url 'communication:admin_view_messages' %}">My Messages</a>
+{% endblock %}
+
+
+{% block options %}
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_record_attendenceI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Record Attendance</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:admin_behavioral_recordI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Add Behavioral Record</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'health_and_behavioral:admin_health_recordI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Add Health Record</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'finance:admin_feesI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Fees</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'users:admin_add_employee' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Add Employee</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_edit_employeeI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Edit Employee</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'users:admin_add_student' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Add Student</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_edit_studentI' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Edit Student</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'communication:admin_view_adv' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">Adverstiments</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'communication:admin_post_adv' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Adverstiment</span>
+        </a>
+    </li>
+    
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_new_class' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Class</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_new_section' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Section</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_new_subject' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Subject</span>
+        </a>
+    </li>
+    <br>
+    <li class="nav-item">
+        <a href="{% url 'academic:admin_new_year' %}" class="nav-link text-white">
+            <span class="fs-4 d-none d-sm-inline">New Year</span>
+        </a>
+    </li>
+{% endblock %}
+
+

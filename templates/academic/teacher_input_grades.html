@@ -1,0 +1,28 @@
+<!-- templates/academic/teacher_input_grades.html -->
+
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+    <h1>Input Exam Grades for {{ class.className }} Class/Section {{ section.sectionSymbol }} in {{ subject.name }} Subject</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="student_ids" value="{% for student in students %}{{ student.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student FullName:</th>
+                    <th>Exam Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.fullName }}</td>
+                    <td><input type="number" name="grades" value="{{ student.exam_grade }}"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Save Grades</button>
+    </form>
+{% endblock %}

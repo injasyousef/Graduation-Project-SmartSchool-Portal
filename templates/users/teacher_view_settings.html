@@ -1,0 +1,13 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+
+            <h1 class=" mb-4">User Settings</h1>
+
+            <h2>Choose an Action</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'users:teacher_change_password' %}" class="text-decoration-none">Change Password</a></li>
+                <li class="list-group-item"><a href="{% url 'users:teacher_view_profile' %}" class="text-decoration-none">View Profile</a></li>
+            </ul>
+
+{% endblock %}

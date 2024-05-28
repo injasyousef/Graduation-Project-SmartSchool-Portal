@@ -1,0 +1,43 @@
+{% extends 'main_app/teacher_page.html' %}
+{% load static %}
+
+{% block content %}
+        <form method="post" action="{% url 'academic:save_grades' %}" class="mt-4">
+            {% csrf_token %}
+            <h2>Insert Grades for {{ subject.name }} - {{ year.yearName }} - {{ class.className }} - {{ section.sectionSymbol }}</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>First Quarter</th>
+                        <th>Second Quarter</th>
+                        <th>Third Quarter</th>
+                        <th>Fourth Quarter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student, grade in student_grades %}
+                    <tr>
+                        <td>{{ student.fullName }}</td>
+                        {% if grade %}
+                            <td><input type="number" name="first_quarter_{{ student.studentID }}" value="{{ grade.firstQuarter }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="second_quarter_{{ student.studentID }}" value="{{ grade.secondQuarter }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="third_quarter_{{ student.studentID }}" value="{{ grade.thirdQuarter }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="fourth_quarter_{{ student.studentID }}" value="{{ grade.fourthQuarter }}" min="0" max="25" class="form-control"></td>
+                        {% else %}
+                            <td><input type="number" name="first_quarter_{{ student.studentID }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="second_quarter_{{ student.studentID }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="third_quarter_{{ student.studentID }}" min="0" max="25" class="form-control"></td>
+                            <td><input type="number" name="fourth_quarter_{{ student.studentID }}" min="0" max="25" class="form-control"></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Save Grades</button>
+            <input type="hidden" name="subject_id" value="{{ subject.subjectID }}">
+            <input type="hidden" name="year_id" value="{{ year.yearID }}">
+            <input type="hidden" name="class_id" value="{{ class.classID }}">
+            <input type="hidden" name="section_id" value="{{ section.sectionID }}">
+        </form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 mb-4 text-center">List of Students</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Full Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'academic:assignments_for_student' student.studentID year_id class_id section_id subject_id %}" class="text-decoration-none">
+                                        {{ student.fullName }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

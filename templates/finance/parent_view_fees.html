@@ -1,0 +1,39 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block content %}
+    <h2>Fees</h2>
+    {% if fees %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Year</th>
+                        <th>School Fees</th>
+                        <th>Paid</th>
+                        <th>Previous Debts</th>
+                        <th>Exemptions</th>
+                        <th>Final Balance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fee in fees %}
+                        <tr>
+                            <td>{{ fee.year.yearName }}</td>
+                            <td>{{ fee.schoolFees }}</td>
+                            <td>{{ fee.paid }}</td>
+                            <td>{{ fee.previousDebts }}</td>
+                            <td>{{ fee.exemptions }}</td>
+                            <td>{{ fee.finalBalance }}</td>
+                            <td>
+                                <a href="{% url 'finance:parent_view_fee_details' fee.year.yearID %}" class="btn btn-primary">See Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">No fees available for the selected year.</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block title %}View Grades{% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url 'academic:parent_view_grades' %}" style="display: inline;">
+        {% csrf_token %}
+        {{ form_subject.as_p }}
+        <button type="submit" class="btn btn-primary mb-5">Filter by Subject</button>
+    </form>
+
+    <form method="post" action="{% url 'academic:parent_view_grades' %}" style="display: inline;">
+        {% csrf_token %}
+        {{ form_year.as_p }}
+        <button type="submit" class="btn btn-primary mb-5">Filter by Year</button>
+    </form>
+
+    {% block content_grades %}
+        <h2>All Grades for All Subjects and Years</h2>
+        {% if grades %}
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Subject</th>
+            <th>Year</th>
+            <th>First Quarter</th>
+            <th>Second Quarter</th>
+            <th>First Semester</th>
+            <th>Third Quarter</th>
+            <th>Fourth Quarter</th>
+            <th>Second Semester</th>
+            <th>Final Average</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for grade in grades %}
+        <tr>
+            <td>{{ grade.subject.name }}</td>
+            <td>{{ grade.year.yearName }}</td>
+            <td>{{ grade.firstQuarter }}</td>
+            <td>{{ grade.secondQuarter }}</td>
+            <td>{{ grade.firstSemester }}</td>
+            <td>{{ grade.thirdQuarter }}</td>
+            <td>{{ grade.fourthQuarter }}</td>
+            <td>{{ grade.secondSemester }}</td>
+            <td>{{ grade.finalAvg }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+        {% else %}
+            <p>No grades available.</p>
+        {% endif %}
+    {% endblock %}
+{% endblock %}

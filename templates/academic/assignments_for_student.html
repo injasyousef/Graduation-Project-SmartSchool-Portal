@@ -1,0 +1,36 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h2 class="display-6 mb-4">Assignments For {{ student.fullName }} In {{ subject.name }} Subject:</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Assignment</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assignment in assignments %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'academic:assignment_grading' assignment.assignmentID %}" class="text-decoration-none">
+                                        {{ assignment.title }}
+                                    </a>
+                                </td>
+                                <td>{{ assignment.dueDate }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

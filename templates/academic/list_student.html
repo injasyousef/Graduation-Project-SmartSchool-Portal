@@ -1,0 +1,23 @@
+
+{% extends 'main_app/teacher_page.html' %}
+
+
+    {% block content %}
+
+         <h1>List of Students</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Full Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td><a href="{% url 'academic:student_grade' student.studentID year_id class_id section_id subject_id %}">{{ student.fullName }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

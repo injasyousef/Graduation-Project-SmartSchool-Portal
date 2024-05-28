@@ -1,0 +1,90 @@
+{% extends 'main_app/student_page.html' %}
+
+{% block title %}View Assignments{% endblock %}
+
+{% block content %}
+    <!-- Filter Form -->
+    <div class="mb-4">
+        <form method="post" action="{% url 'academic:see_assignments' %}" class="form-inline">
+            {% csrf_token %}
+            <div class="form-group mr-2">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Filter by Year</button>
+        </form>
+    </div>
+
+    <h2 class="mb-4">Assignments filtered by Year for {{ user_name }} in {{ selected_year }}</h2>
+
+    <!-- Main Assignments Table -->
+    <div class="table-responsive">
+        {% if assignments %}
+            <table class="table table-bordered table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Due Date</th>
+                        <th>Teacher</th>
+                        <th>Subject</th>
+                        <th>Class</th>
+                        <th>Assignment Grade</th>
+                        <th>Assignment Final Grade</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                        <tr>
+                            <td>{{ assignment.title }}</td>
+                            <td class="{% if assignment.submit and assignment.dueDate >= threshold_date %}text-primary{% elif  assignment.submit and assignment.dueDate < threshold_date %}text-success{% elif not assignment.submit and assignment.dueDate >= threshold_date %}text-warning{% else %}text-danger{% endif %}">
+                                {{ assignment.dueDate }}
+                            </td>
+                            <td>{{ assignment.teacher.firstName }}</td>
+                            <td>{{ assignment.subject.name }}</td>
+                            <td>{{ assignment.school_class.className }}</td>
+                            <td>{{ assignment.assignmentGrade }}</td>
+                            <td>{{ assignment.assignmentFinalGrade }}</td>
+                            <td>
+                                <a href="{% url 'academic:view_assignment_details' assignment.assignmentID %}" class="btn btn-info btn-sm">See Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info">No assignments available for the selected year.</div>
+        {% endif %}
+    </div>
+
+    <!-- Color Legends Table -->
+    <div class="mt-5">
+        <h3>Color Legends</h3>
+        <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>Color</th>
+                    <th>Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-success">Green</td>
+                    <td>Submitted and due date has passed</td>
+                </tr>
+                <tr>
+                    <td class="text-primary">Blue</td>
+                    <td>Submitted and due date has not passed</td>
+                </tr>
+                <tr>
+                    <td class="text-warning">Orange</td>
+                    <td>Not submitted and due date has not passed</td>
+                </tr>
+                <tr>
+                    <td class="text-danger">Red</td>
+                    <td>Not submitted and due date has passed</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

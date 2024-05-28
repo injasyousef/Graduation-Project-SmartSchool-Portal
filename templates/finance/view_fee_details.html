@@ -1,0 +1,35 @@
+{% extends 'main_app/student_page.html' %}
+
+{% block title %}View Fee Details{% endblock %}
+
+{% block content %}
+    <h2>Payments</h2>
+
+    {% if payments %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Description</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pay in payments %}
+                        <tr>
+                            <td>{{ pay.amount }}</td>
+                            <td>{{ pay.date }}</td>
+                            <td>{{ pay.description }}</td>
+                            <!-- Include data for previousDebts, exemptions, and exemptionsDetail here if needed -->
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">No assignments available{% if selected_year %} for the selected year{% endif %}.</div>
+    {% endif %}
+{% endblock %}

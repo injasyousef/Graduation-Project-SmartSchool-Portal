@@ -1,0 +1,29 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+    <h1>Your Messages</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Message Title</th>
+                    <th>Sender</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                <tr>
+                    <td><a href="{% url 'communication:teacher_view_message_details' message.messageID %}">{{ message.title }}</a></td>
+                    <td> 
+                        {% if message.senderEmployee %}
+                            {{ message.senderEmployee.employee.fullName}}
+                        {% elif message.senderStudent %}
+                            {{ message.senderStudent.student.fullName}}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'main_app/teacher_page.html' %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">{{ assignment.title }}</h1>
+                    <p class="card-text"><strong>Submit Text:</strong> {{ assignment.submit_text }}</p>
+                    {% if assignment.fileSubmit %}
+                        <p class="card-text"><strong>Submit File:</strong> <a href="{% url 'academic:download_fileII' assignment.assignmentID %}" target="_blank">{{ assignment.fileSubmit.name }}</a></p>
+                    {% else %}
+                        <p class="card-text">No file submitted.</p>
+                    {% endif %}
+                    <p class="card-text"><strong>Submit Link:</strong> <a href="{{assignment.link}}" target="_blank">{{ assignment.link }}</a></p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save Grade</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

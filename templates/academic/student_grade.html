@@ -1,0 +1,42 @@
+
+{% extends 'main_app/teacher_page.html' %}
+
+
+    {% block content %}
+
+        
+    <h1>Grade For Student: {{ student.fullName }}</h1>
+    <hr>
+ <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>First Quarter</td>
+                    <td><input type="number" name="firstQuarter" value="{{ grade.firstQuarter }}"></td>
+                </tr>
+                <tr>
+                    <td>Second Quarter</td>
+                    <td><input type="number" name="secondQuarter" value="{{ grade.secondQuarter }}"></td>
+                </tr>
+                <tr>
+                    <td>Third Quarter</td>
+                    <td><input type="number" name="thirdQuarter" value="{{ grade.thirdQuarter }}"></td>
+                </tr>
+                <tr>
+                    <td>Fourth Quarter</td>
+                    <td><input type="number" name="fourthQuarter" value="{{ grade.fourthQuarter }}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary mt-2">Save</button>
+    </form>
+
+
+    {% endblock %}

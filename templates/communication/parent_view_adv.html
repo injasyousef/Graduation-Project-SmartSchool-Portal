@@ -1,0 +1,14 @@
+{% extends 'main_app/parent_page.html' %}
+
+{% block content %}
+    <h1 class="mb-4">Advertisements</h1>
+    <div class="list-group">
+        {% for ad in ads %}
+            <div class="list-group-item list-group-item-action mb-3">
+                <h2 class="h5">{{ ad.title }}</h2>
+                <p>{{ ad.content }}</p>
+                <p class="text-muted"><em>Posted by {{ ad.employee.fullName }} on {{ ad.date }}</em></p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
