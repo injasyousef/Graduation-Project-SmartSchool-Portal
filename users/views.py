@@ -30,7 +30,7 @@ def user_login(request):
                 login(request, user)
                 return redirect("home")
             else:
-                return render(request, template_name, {'form': form, 'error': 'Invalid credentials'})
+                return render(request, template_name, {'form': form, 'error': 'Wrong username or password'})
     else:
         form = CustomLoginForm()
 

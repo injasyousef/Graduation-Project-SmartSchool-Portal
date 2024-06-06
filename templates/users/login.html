@@ -49,6 +49,9 @@
       width: 100%;
       border-radius: 10px;
     }
+    .alert {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -70,6 +73,11 @@
           <a href="{% url 'users:password_reset' %}" class="d-block text-center mt-3 text-secondary">
             Forgot Password?
           </a>
+          {% if error %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+            </div>
+          {% endif %}
         </form>
       </div>
     </div>
