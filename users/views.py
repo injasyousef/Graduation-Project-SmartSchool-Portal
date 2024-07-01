@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetView
 
@@ -9,7 +10,7 @@ def welcome(request):
     return render(request, 'users/welcome.html')
 
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from users.forms import CustomLoginForm, CustomPasswordChangeForm, CustomPasswordResetForm, EmployeeForm, \
     UserEmployeeForm, StudentForm, UserStudentForm
 
@@ -114,17 +115,24 @@ def admin_add_employee(request):
         form = EmployeeForm()
     return render(request, 'users/admin_add_employee.html', {'form': form})
 
-def admin_add_user_employee(request,employee_id):
-    employee=Employee.objects.get(employeeID=employee_id)
+def admin_add_user_employee(request, employee_id):
+    employee = get_object_or_404(Employee, employeeID=employee_id)
+
     if request.method == 'POST':
         form = UserEmployeeForm(request.POST)
         if form.is_valid():
-            form.save()
-            form.employee=employee
-            return render(request, 'users/admin_add_user_employee.html', {'form': form, 'employee': employee})
+            user_employee = form.save(commit=False)
+            user_employee.employee = employee
+            try:
+                user_employee.save()
+                return redirect('users:admin_add_employee')  # Redirect to a success page or another view
+
+            except forms.ValidationError as e:
+                form.add_error('username', e)
     else:
         form = UserEmployeeForm()
-    return render(request, 'users/admin_add_user_employee.html', {'form': form,'employee':employee})
+
+    return render(request, 'users/admin_add_user_employee.html', {'form': form, 'employee': employee})
 
 def admin_add_student(request):
     if request.method == 'POST':
@@ -137,17 +145,22 @@ def admin_add_student(request):
     return render(request, 'users/admin_add_student.html', {'form': form})
 
 def admin_add_user_student(request, student_id):
-    student = Student.objects.get(studentID=student_id)
+    student = get_object_or_404(Student, studentID=student_id)
+
     if request.method == 'POST':
         form = UserStudentForm(request.POST)
         if form.is_valid():
-            user_student = form.save(commit=False)  # Get an unsaved instance
-            user_student.student = student  # Set the student field
-            user_student.save()  # Save the instance with the student field set
-            return render(request, 'users/admin_add_user_student.html', {'form': form, 'employee': student})
+            user_student = form.save(commit=False)
+            user_student.student = student
+            try:
+                user_student.save()
+                return redirect('users:admin_add_student')  # Redirect to a success page or another view
+            except forms.ValidationError as e:
+                form.add_error(None, e)  # Add non-field error if saving fails
     else:
         form = UserStudentForm()
-    return render(request, 'users/admin_add_user_student.html', {'form': form, 'employee': student})
+
+    return render(request, 'users/admin_add_user_student.html', {'form': form, 'student': student})
 
 def secretary_add_student(request):
     if request.method == 'POST':

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.http import HttpResponseRedirect, FileResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -332,6 +333,8 @@ def get_classes_for_year(request):
 def get_sections_for_class_and_year(request):
     year_id = request.GET.get('year_id')
     class_id = request.GET.get('class_id')
+
+    print(year_id,class_id)
     try:
         sections = Section.objects.filter(
             year_id=year_id,
@@ -1064,11 +1067,18 @@ def teacher_insert_grades2(request):
             section = form.cleaned_data['section']
 
             # Fetch all students matching the selected criteria
+            # students = Student.objects.filter(
+            #     currentYear=year.yearID,
+            #     currentClass=school_class.classID,
+            #     currentSection=section.sectionID,
+            #     studentsubject__subjectID=subject.subjectID
+            # )
+            #Edition
             students = Student.objects.filter(
-                currentYear=year.yearID,
-                currentClass=school_class.classID,
-                currentSection=section.sectionID,
-                studentsubject__subjectID=subject.subjectID
+                currentYear=year,
+                currentClass=school_class,
+                currentSection=section,
+                studentsubject__subjectID=subject
             )
 
             # Pass students and grades to the template
@@ -1173,6 +1183,8 @@ def admin_new_class(request):
         form = ClassForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Class added successfully!')
+            return redirect(reverse('academic:admin_new_class'))  # Ensure reverse is used here
     else:
         form = ClassForm()
     return render(request, 'academic/admin_new_class.html', {'form': form})
@@ -1307,7 +1319,56 @@ def admin_new_year(request):
             )
             school_sittings.save()
 
+            with transaction.atomic():
+                # Duplicate all Section objects for the new study year
+                sections = Section.objects.all()
+                for section in sections:
+                    Section.objects.create(
+                        year=study_year,
+                        school_class=section.school_class,
+                        sectionSymbol=section.sectionSymbol,
+                        description=section.description,
+                        supervisor=section.supervisor
+                    )
 
+                # Duplicate all ClassSubject objects for the new study year
+                class_subjects = ClassSubject.objects.all()
+                for class_subject in class_subjects:
+                    ClassSubject.objects.create(
+                        school_class=class_subject.school_class,
+                        subject=class_subject.subject,
+                        year=study_year,
+                        teacher=class_subject.teacher
+                    )
+
+                # Update students' currentYear, currentClass, and currentSection
+                students = Student.objects.select_related('currentClass').all()
+                for student in students:
+                    # Update currentYear to the new study year
+                    student.currentYear = study_year
+
+                    # Update currentClass to the next class
+                    next_class = student.currentClass.next_class
+                    if next_class:
+                        student.currentClass = next_class
+
+                    # Update currentSection
+                    sections = Section.objects.filter(school_class=student.currentClass,year=student.currentYear).order_by('sectionID')
+                    for section in sections:
+                        if section.current_section.count() < 2:  # Use the related_name 'current_section' to get related students
+                            student.currentSection = section
+                            break
+
+                    # Save the updated student instance
+                    student.save()
+
+                    # Assign subjects to the student based on the new class
+                    new_class_subjects = ClassSubject.objects.filter(school_class=student.currentClass, year=study_year)
+                    for class_subject in new_class_subjects:
+                        StudentSubject.objects.get_or_create(
+                            studentID=student,
+                            subjectID=class_subject.subject
+                        )
     else:
         study_year_form = StudyYearForm()
         school_sittings_form = SchoolSittingsForm()
@@ -1316,7 +1377,6 @@ def admin_new_year(request):
         'study_year_form': study_year_form,
         'school_sittings_form': school_sittings_form
     })
-
 
 def admin_edit_studentI(request):
     if request.method == 'POST':

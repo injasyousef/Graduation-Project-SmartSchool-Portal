@@ -52,7 +52,7 @@ class EmployeeForm(forms.ModelForm):
 class UserEmployeeForm(forms.ModelForm):
     class Meta:
         model = UserEmployee
-        fields = ['year', 'employee', 'username', 'password', 'isActive']
+        fields = ['year','username', 'password', 'isActive']
         widgets = {
             'password': forms.PasswordInput(),  # Render the password field as a password input
         }
@@ -63,10 +63,9 @@ class UserEmployeeForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
     def clean_username(self):
-        # Check if the username is already taken
-        username = self.cleaned_data['username']
+        username = self.cleaned_data.get('username')
         if UserEmployee.objects.filter(username=username).exists():
-            raise forms.ValidationError("This username is already in use.")
+            raise forms.ValidationError("This username is already taken.")
         return username
 
 
@@ -99,9 +98,16 @@ class UserStudentForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
     def clean_username(self):
-        # Check if the username is already taken
-        username = self.cleaned_data['username']
+        username = self.cleaned_data.get('username')
         if UserStudent.objects.filter(username=username).exists():
-            raise forms.ValidationError("This username is already in use.")
+            raise forms.ValidationError("This username is already taken.")
         return username
+
+    def clean_parentUsername(self):
+        parentUsername = self.cleaned_data.get('parentUsername')
+        if UserStudent.objects.filter(parentUsername=parentUsername).exists():
+            raise forms.ValidationError("This parent username is already taken.")
+        return parentUsername
+
+
 

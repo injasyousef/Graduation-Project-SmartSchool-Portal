@@ -37,7 +37,7 @@ class Employee(models.Model):
 class UserEmployee(models.Model):
     year = models.ForeignKey('academic.StudyYear', on_delete=models.CASCADE)
     employee = models.OneToOneField(Employee, primary_key=True, on_delete=models.CASCADE)
-    username = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)  # Ensure unique usernames
     password = models.CharField(max_length=255)
     isActive = models.BooleanField()
 
@@ -85,9 +85,9 @@ class Student(models.Model):
 class UserStudent(models.Model):
     year = models.ForeignKey('academic.StudyYear', on_delete=models.CASCADE)
     student = models.OneToOneField(Student, primary_key=True, on_delete=models.CASCADE)
-    username = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)  # Ensure unique usernames
     password = models.CharField(max_length=255)
-    parentUsername = models.CharField(max_length=255)
+    parentUsername = models.CharField(max_length=255, unique=True)  # Ensure unique parent usernames
     parentPassword = models.CharField(max_length=255)
     isActive = models.BooleanField()
     Financialactive = models.BooleanField()

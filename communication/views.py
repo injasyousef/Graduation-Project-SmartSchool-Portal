@@ -148,17 +148,24 @@ def teacher_send_message(request):
 
 
 def teacher_message_list_students(request, year_id, class_id, section_id, subject_id):
+    # Fetch the relevant objects
+    #Edition
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
     subject = Subject.objects.get(subjectID=subject_id)
+    print(year.yearName, clas.className, section.sectionSymbol, section.year.yearName, subject.name)
 
+    # Filter students
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-        studentsubject__subjectID=subject.subjectID
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+        studentsubject__subjectID=subject
     )
+
+    for student in students:
+        print(student.fullName)
 
     context = {
         'year': year,

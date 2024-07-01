@@ -27,31 +27,34 @@ class GradeInsertionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Set initial value for the year field
         last_year = StudyYear.objects.last()
         if last_year:
             self.fields['year'].initial = last_year.yearID
 
-        # Only include the last year record in the queryset
         self.fields['year'].queryset = StudyYear.objects.filter(pk=last_year.pk)
 
-        year_id = self.data.get('year') if self.is_bound else None
-        class_id = self.data.get('school_class') if self.is_bound else None
+        year_id = self.data.get('year') if self.is_bound else self.initial.get('year')
+        class_id = self.data.get('school_class') if self.is_bound else self.initial.get('school_class')
 
         self.fields['school_class'].queryset = Class.objects.all()
 
+        if year_id:
+            self.fields['school_class'].queryset = Class.objects.filter(
+                classsubject__year_id=year_id
+            ).distinct()
+
         if year_id and class_id:
+            self.fields['section'].queryset = Section.objects.filter(
+                school_class_id=class_id
+            ).order_by('sectionSymbol')
+
             self.fields['subject'].queryset = Subject.objects.filter(
                 classsubject__school_class_id=class_id,
                 classsubject__year_id=year_id
             ).distinct()
         else:
-            self.fields['subject'].queryset = Subject.objects.none()
-
-        if class_id:
-            self.fields['section'].queryset = Section.objects.filter(school_class_id=class_id).order_by('sectionSymbol')
-        else:
             self.fields['section'].queryset = Section.objects.none()
+            self.fields['subject'].queryset = Subject.objects.none()
 
 
 class NewAssForm(forms.ModelForm):
@@ -197,7 +200,7 @@ class StudentFeesForm(forms.ModelForm):
 class ClassForm(forms.ModelForm):
     class Meta:
         model = Class
-        fields = ['className', 'classNameOther', 'isActive']
+        fields = ['className', 'classNameOther','next_class', 'isActive']
 
     def __init__(self, *args, **kwargs):
         super(ClassForm, self).__init__(*args, **kwargs)

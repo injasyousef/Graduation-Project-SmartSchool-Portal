@@ -15,6 +15,9 @@ class Message(models.Model):
     senderStudent = models.ForeignKey(UserStudent, related_name='sent_messages',null=True, blank=True, on_delete=models.CASCADE)
     receiverStudent = models.ForeignKey(UserStudent, related_name='received_messages',null=True, blank=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
+
 class Advertisement(models.Model):
     year = models.ForeignKey('academic.StudyYear', on_delete=models.CASCADE)
     employee = models.ForeignKey('users.Employee', on_delete=models.CASCADE)

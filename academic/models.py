@@ -18,6 +18,7 @@ class Class(models.Model):
     className = models.CharField(max_length=255)
     classNameOther = models.CharField(max_length=255)
     isActive = models.BooleanField()
+    next_class = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='previous_class')
 
     def __str__(self):
         return self.className
@@ -44,7 +45,7 @@ class Section(models.Model):
         ordering = ['sectionID']
 
     def __str__(self):
-        return self.sectionSymbol
+        return f"{self.sectionSymbol} - {self.year.yearName}"
 
 
 class Subject(models.Model):
@@ -64,6 +65,9 @@ class StudentSubject(models.Model):
     class Meta:
         unique_together = ('studentID', 'subjectID')
 
+    def __str__(self):
+        return f"{self.subjectID.name} - {self.studentID.fullName}"
+
 
 class ClassSubject(models.Model):
     school_class = models.ForeignKey(Class, on_delete=models.CASCADE)
@@ -72,7 +76,10 @@ class ClassSubject(models.Model):
     teacher = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('subject', 'school_class',)
+        unique_together = ('subject', 'school_class','year')
+
+    def __str__(self):
+        return f"{self.subject} - {self.school_class.className} ({self.year})"
 
 
 class SchoolSittings(models.Model):
