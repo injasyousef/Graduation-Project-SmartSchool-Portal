@@ -4,6 +4,7 @@
 
 {% block links %} 
     <a class="dropdown-item" href="{% url 'users:parent_view_settings' %}">My Account</a>
+    <a class="dropdown-item" href="{% url 'communication:send_parent_message' %}">New Message</a>
     <a class="dropdown-item" href="{% url 'communication:parent_view_messages' %}">Child Messages</a>
 {% endblock %}
 

@@ -17,6 +17,8 @@
         {{ employee_form.as_p }}
         <button type="submit" name="submit_employee" class="btn btn-primary">Send Message to Employee</button>
     </form>
+    <a href="{% url 'communication:admin_send_message_employees' %}" class="btn btn-primary mt-3">Sent Message to all Employees</a>   
+    
     <br>    
     <h2>Sent Message for All System Users</h2>
     <a href="{% url 'communication:admin_send_message_users' %}" class="btn btn-primary">Sent Message to all Users</a>   

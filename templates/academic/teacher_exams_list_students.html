@@ -28,10 +28,53 @@
                     </tbody>
                 </table>
             </div>
-            <div class="text-center mt-3">
+
+
+            {% if students.has_other_pages %}
+                <div class="row justify-content-center">
+                    <nav aria-label="Students pagination" class="mb-4">
+                        <ul class="pagination justify-content-center">
+                            {% if students.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ students.previous_page_number }}&year={{ year.yearID }}&class={{ class.classID }}&section={{ section.sectionID }}&subject={{ subject.subjectID }}">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in students.paginator.page_range %}
+                                {% if students.number == page_num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">
+                                            {{ page_num }}
+                                            <span class="sr-only">(current)</span>
+                                        </span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_num }}&year={{ year.yearID }}&class={{ class.classID }}&section={{ section.sectionID }}&subject={{ subject.subjectID }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if students.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ students.next_page_number }}&year={{ year.yearID }}&class={{ class.classID }}&section={{ section.sectionID }}&subject={{ subject.subjectID }}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+        <div class="text-center mt-3">
                 <a href="{% url 'academic:teacher_exams_new_exam' year.yearID class.classID section.sectionID subject.subjectID %}" class="btn btn-primary">Add New Exam For The Section</a>
-            </div>
         </div>
     </div>
-
 {% endblock %}

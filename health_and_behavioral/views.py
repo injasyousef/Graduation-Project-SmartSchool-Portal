@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
@@ -105,18 +106,27 @@ def admin_behavioral_recordI(request):
 
     return render(request, 'health_and_behavioral/admin_behavioral_recordI.html', {'form': form})
 
-def admin_behavioral_recordII(request,year_id,class_id,section_id):
-
+def admin_behavioral_recordII(request, year_id, class_id, section_id):
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
 
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-    )
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+    ).order_by('fullName')  # Ensure the queryset is ordered
 
+    # Pagination
+    paginator = Paginator(students, 5)  # Show 20 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,
@@ -308,18 +318,27 @@ def admin_health_recordI(request):
 
     return render(request, 'health_and_behavioral/admin_health_recordI.html', {'form': form})
 
-def admin_health_recordII(request,year_id,class_id,section_id):
-
+def admin_health_recordII(request, year_id, class_id, section_id):
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
 
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-    )
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+    ).order_by('fullName')  # Ensure the queryset is ordered
 
+    # Pagination
+    paginator = Paginator(students, 5)  # Show 20 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,

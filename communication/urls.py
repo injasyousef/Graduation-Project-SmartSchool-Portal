@@ -8,6 +8,7 @@ app_name = 'communication'
 
 urlpatterns = [
     path('send_message/', views.send_message,name="send_message"),
+    path('send_parent_message/', views.send_parent_message, name="send_parent_message"),
     path('view_messages/', views.view_messages, name="view_messages"),
     path('message_details/<int:message_id>', views.message_details, name="message_details"),
     path('parent_view_messages/', views.parent_view_messages, name="parent_view_messages"),
@@ -38,6 +39,9 @@ urlpatterns = [
 
     path('admin_send_message/', views.admin_send_message, name="admin_send_message"),
     path('admin_send_message_employee/<int:employee_id>', views.admin_send_message_employee, name="admin_send_message_employee"),
+    path('admin_send_message_employees', views.admin_send_message_employees,
+         name="admin_send_message_employees"),
+
     path('admin_message_list_students/<int:year_id>/<int:class_id>/<int:section_id>',
          views.admin_message_list_students, name='admin_message_list_students'),
     path('admin_send_message_student/<int:student_id>', views.admin_send_message_student,

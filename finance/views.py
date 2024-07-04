@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -72,10 +73,21 @@ def admin_feesII(request, year_id, class_id, section_id):
     section = Section.objects.get(sectionID=section_id)
 
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-    )
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+    ).order_by('fullName')  # Ensure the queryset is ordered
+
+    # Pagination
+    paginator = Paginator(students, 5)  # Show 20 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,

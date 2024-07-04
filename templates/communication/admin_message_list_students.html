@@ -3,25 +3,67 @@
 
 
 {% block content %}
-
-    <h1>Students For {{ class.className}} Class/Section {{ section.sectionSymbol }} In {{ subject.name }} Subject:</h1>
-    <table>
-            <thead>
-                <tr>
-                    <th>Student FullName:</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students %}
+    <div class="container mt-4">
+        <h1>Students For {{ class.className }} Class/Section {{ section.sectionSymbol }}</h1>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
                     <tr>
-                    <td><a href="{% url  'communication:admin_send_message_student' student.studentID %}">{{ student.fullName }}</a></td>
+                        <th>Student FullName</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-    </table>
-    <br>
-    <br>
-    <a class="btn btn-primary" href="{% url 'communication:admin_send_message_section' year.yearID class.classID section.sectionID %}">Message for All Section Students</a>
-    <a class="btn btn-primary" href="{% url 'communication:admin_send_message_class' year.yearID class.classID %}">Message for All Class Students</a>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td><a href="{% url 'communication:admin_send_message_student' student.studentID %}">{{ student.fullName }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if students.has_other_pages %}
+            <nav aria-label="Students pagination">
+                <ul class="pagination justify-content-center">
+                    {% if students.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ students.previous_page_number }}">{{ _('Previous') }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">{{ _('Previous') }}</span>
+                        </li>
+                    {% endif %}
 
+                    {% for page_num in students.paginator.page_range %}
+                        {% if students.number == page_num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }} <span class="sr-only">(current)</span></span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if students.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ students.next_page_number }}">{{ _('Next') }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">{{ _('Next') }}</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+        
+        <br>
+        <a class="btn btn-primary" href="{% url 'communication:admin_send_message_section' year.yearID class.classID section.sectionID %}">Message for All Section Students</a>
+        <a class="btn btn-primary" href="{% url 'communication:admin_send_message_class' year.yearID class.classID %}">Message for All Class Students</a>
+    </div>
 {% endblock %}

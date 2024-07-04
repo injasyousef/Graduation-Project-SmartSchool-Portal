@@ -1,12 +1,13 @@
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, FileResponse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect, FileResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from academic.forms import GradeInsertionForm, AttendenceForm, EmployeeSelectionForm
 from academic.models import StudyYear, Class, Section, Subject
-from .forms import SendMessageForm, TeacherMessageForm, AdvertisementForm
+from .forms import SendMessageForm, TeacherMessageForm, AdvertisementForm, ParentSendMessageForm
 from users.models import UserStudent, UserEmployee, Student
 from .models import Message, Advertisement
 from django.shortcuts import redirect
@@ -41,6 +42,33 @@ def send_message(request):
 
     return render(request, 'communication/student_send_message.html', {'form': form})
 
+def send_parent_message(request):
+    user_parent_username = request.user.username
+    user_student = UserStudent.objects.filter(parentUsername=user_parent_username).first()
+    parent_full_name=user_student.student.parentFullName
+
+    if not user_student:
+        return HttpResponse("You are not authorized to send messages.")
+
+    if request.method == 'POST':
+        form = ParentSendMessageForm(request.POST, request.FILES, user_parent=user_parent_username)
+
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.senderParent = parent_full_name
+
+            if 'file' in request.FILES:
+                message.file = request.FILES['file']
+
+            message.save()
+            return HttpResponseRedirect(request.path_info)
+        else:
+            print(request.POST)
+            print(form.errors)
+    else:
+        form = ParentSendMessageForm(user_parent=user_parent_username)
+
+    return render(request, 'communication/parent_send_message.html', {'form': form})
 def view_messages(request):
     student=UserStudent.objects.get(username=request.user.username)
 
@@ -95,16 +123,15 @@ class DownloadFileViewInsert(View):
 
 
 def teacher_view_messages(request):
-    teacher=UserEmployee.objects.get(username=request.user.username)
-
+    teacher = UserEmployee.objects.get(username=request.user.username)
     messages = Message.objects.filter(receiverEmployee=teacher).order_by('-date')
 
+
     context = {
-        'messages': messages
+        'messages': messages,
     }
 
-    return render(request, 'communication/teacher_view_messages.html',context)
-
+    return render(request, 'communication/teacher_view_messages.html', context)
 
 def teacher_view_message_details(request,message_id):
     message = get_object_or_404(Message, pk=message_id)
@@ -149,12 +176,10 @@ def teacher_send_message(request):
 
 def teacher_message_list_students(request, year_id, class_id, section_id, subject_id):
     # Fetch the relevant objects
-    #Edition
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
     subject = Subject.objects.get(subjectID=subject_id)
-    print(year.yearName, clas.className, section.sectionSymbol, section.year.yearName, subject.name)
 
     # Filter students
     students = Student.objects.filter(
@@ -162,10 +187,18 @@ def teacher_message_list_students(request, year_id, class_id, section_id, subjec
         currentClass=clas,
         currentSection=section,
         studentsubject__subjectID=subject
-    )
+    ).order_by('fullName')  # Ensure the queryset is ordered
 
-    for student in students:
-        print(student.fullName)
+    # Paginate students
+    paginator = Paginator(students, 5)  # Show 2 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,
@@ -399,10 +432,21 @@ def admin_message_list_students(request, year_id, class_id, section_id):
     section = Section.objects.get(sectionID=section_id)
 
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-    )
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+    ).order_by('fullName')  # Ensure the queryset is ordered
+
+    # Pagination
+    paginator = Paginator(students, 5)  # Show 20 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,
@@ -411,7 +455,6 @@ def admin_message_list_students(request, year_id, class_id, section_id):
         'students': students
     }
 
-    # Render the template with the provided context
     return render(request, 'communication/admin_message_list_students.html', context)
 
 def admin_send_message_student(request,student_id):
@@ -523,6 +566,26 @@ def admin_send_message_users(request):
     }
 
     return render(request, 'communication/admin_send_message_users.html', context)
+
+def admin_send_message_employees(request):
+    employees = UserEmployee.objects.all()
+
+    if request.method == 'POST':
+        form = TeacherMessageForm(request.POST, request.FILES)  # Define the form here
+        if form.is_valid():
+            for employee in employees:
+                form_instance = TeacherMessageForm(request.POST, request.FILES)  # Create a new form instance
+                message = form_instance.save(commit=False)
+                message.receiverEmployee = employee
+                message.senderEmployee = UserEmployee.objects.get(username=request.user.username)
+                message.save()
+    else:
+        form = TeacherMessageForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'communication/admin_send_message_employees.html', context)
 
 
 def secretary_send_message(request):

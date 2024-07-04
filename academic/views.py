@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect, FileResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views import View
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from health_and_behavioral.models import BehaviourEvaluation
 from times.models import Day, Time
@@ -334,11 +335,14 @@ def get_sections_for_class_and_year(request):
     year_id = request.GET.get('year_id')
     class_id = request.GET.get('class_id')
 
+    year = StudyYear.objects.get(yearID=year_id)
+    clas = Class.objects.get(classID=class_id)
+
     print(year_id,class_id)
     try:
         sections = Section.objects.filter(
-            year_id=year_id,
-            school_class_id=class_id
+            year=year,
+            school_class=clas
         ).order_by('sectionSymbol')
         section_list = [{'id': section.sectionID, 'symbol': section.sectionSymbol} for section in sections]
         return JsonResponse(section_list, safe=False)
@@ -625,24 +629,33 @@ def list_students_for_assignments(request):
     section_id = request.GET.get('section')
     subject_id = request.GET.get('subject')
 
-    # You can perform any additional logic here, such as fetching related objects or data
-
-    # Example: Fetching the names of the selected objects (you'll need appropriate models and relationships)
+    # Fetching the names of the selected objects
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
     subject = Subject.objects.get(subjectID=subject_id)
 
+    # Filter students based on the provided parameters and order them
     students = Student.objects.filter(
         currentYear=year.yearID,
         currentClass=clas.classID,
         currentSection=section.sectionID,
         studentsubject__subjectID=subject.subjectID
-    )
+    ).order_by('fullName')  # Change 'fullName' to the appropriate field to order by
+
+    # Paginate the students queryset
+    page = request.GET.get('page')
+    paginator = Paginator(students, 5)
+    try:
+        students_page = paginator.page(page)
+    except PageNotAnInteger:
+        students_page = paginator.page(1)
+    except EmptyPage:
+        students_page = paginator.page(paginator.num_pages)
 
     # Pass the retrieved data to the template
     context = {
-        'students': students,
+        'students': students_page,
         'year_id': year.yearID,
         'class_id': clas.classID,
         'section_id': section.sectionID,
@@ -738,7 +751,17 @@ def teacher_exams_list_students(request, year_id, class_id, section_id, subject_
         currentClass=clas.classID,
         currentSection=section.sectionID,
         studentsubject__subjectID=subject.subjectID
-    )
+    ).order_by('fullName')  # Ensure the queryset is ordered
+
+    paginator = Paginator(students, 5)  # Show 2 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,
@@ -748,9 +771,7 @@ def teacher_exams_list_students(request, year_id, class_id, section_id, subject_
         'students': students
     }
 
-    # Render the template with the provided context
     return render(request, 'academic/teacher_exams_list_students.html', context)
-
 
 def teacher_exams_new_exam(request, year_id, class_id, section_id, subject_id):
     year = StudyYear.objects.get(yearID=year_id)
@@ -861,8 +882,6 @@ def admin_record_attendenceI(request):
                           kwargs={'year_id': year.yearID, 'class_id': school_class.classID,
                                   'section_id': section.sectionID})
             return redirect(url)
-
-
         else:
             print("Form is not valid. Errors:", form.errors)
     else:
@@ -871,16 +890,28 @@ def admin_record_attendenceI(request):
     return render(request, 'academic/admin_record_attendenceI.html', {'form': form})
 
 
+
 def admin_record_attendenceII(request, year_id, class_id, section_id):
     year = StudyYear.objects.get(yearID=year_id)
     clas = Class.objects.get(classID=class_id)
     section = Section.objects.get(sectionID=section_id)
 
     students = Student.objects.filter(
-        currentYear=year.yearID,
-        currentClass=clas.classID,
-        currentSection=section.sectionID,
-    )
+        currentYear=year,
+        currentClass=clas,
+        currentSection=section,
+    ).order_by('fullName')  # Ensure the queryset is ordered
+
+    # Pagination
+    paginator = Paginator(students, 5)  # Show 20 students per page
+    page = request.GET.get('page')
+
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        students = paginator.page(1)
+    except EmptyPage:
+        students = paginator.page(paginator.num_pages)
 
     context = {
         'year': year,

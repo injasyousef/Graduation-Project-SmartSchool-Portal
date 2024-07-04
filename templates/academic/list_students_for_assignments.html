@@ -1,7 +1,6 @@
 {% extends 'main_app/teacher_page.html' %}
 
 {% block content %}
-
     <div class="row">
         <div class="col-12">
             <h1 class="display-4 mb-4 text-center">List of Students</h1>
@@ -32,4 +31,46 @@
         </div>
     </div>
 
+    {% if students.has_other_pages %}
+        <div class="row justify-content-center">
+            <nav aria-label="Students pagination" class="mb-4">
+                <ul class="pagination justify-content-center">
+                    {% if students.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ students.previous_page_number }}&year={{ year_id }}&class={{ class_id }}&section={{ section_id }}&subject={{ subject_id }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    {% endif %}
+
+                    {% for page_num in students.paginator.page_range %}
+                        {% if students.number == page_num %}
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    {{ page_num }}
+                                    <span class="sr-only">(current)</span>
+                                </span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_num }}&year={{ year_id }}&class={{ class_id }}&section={{ section_id }}&subject={{ subject_id }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if students.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ students.next_page_number }}&year={{ year_id }}&class={{ class_id }}&section={{ section_id }}&subject={{ subject_id }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
 {% endblock %}

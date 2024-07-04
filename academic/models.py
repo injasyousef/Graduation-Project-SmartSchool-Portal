@@ -44,8 +44,10 @@ class Section(models.Model):
     class Meta:
         ordering = ['sectionID']
 
+    # def __str__(self):
+    #     return f"{self.sectionSymbol} - {self.year.yearName}"
     def __str__(self):
-        return f"{self.sectionSymbol} - {self.year.yearName}"
+        return self.sectionSymbol
 
 
 class Subject(models.Model):

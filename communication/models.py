@@ -14,6 +14,8 @@ class Message(models.Model):
     receiverEmployee = models.ForeignKey(UserEmployee, related_name='received_messages',null=True, blank=True, on_delete=models.CASCADE)
     senderStudent = models.ForeignKey(UserStudent, related_name='sent_messages',null=True, blank=True, on_delete=models.CASCADE)
     receiverStudent = models.ForeignKey(UserStudent, related_name='received_messages',null=True, blank=True, on_delete=models.CASCADE)
+    senderParent = models.CharField(max_length=255, null=True, blank=True)  # Store parent username
+
 
     def __str__(self):
         return self.title
