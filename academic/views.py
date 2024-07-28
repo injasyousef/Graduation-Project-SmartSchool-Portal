@@ -119,22 +119,21 @@ def see_assignments(request):
     user_student = UserStudent.objects.get(username=request.user.username)
     student = user_student.student
     assignments = Assignment.objects.filter(student=student).order_by("-dueDate")
-    selected_year = None
+
+    form_subject = SubjectFilterForm(request.POST or None)
 
     if request.method == 'POST':
-        form = YearFilterForm(request.POST)
-        if form.is_valid():
-            selected_year = form.cleaned_data['year']
-            if selected_year:
-                assignments = assignments.filter(year=selected_year)
+        if 'subject' in request.POST and form_subject.is_valid():
+            selected_subject = form_subject.cleaned_data['subject']
+            if selected_subject:
+                assignments = assignments.filter(subject=selected_subject)
 
     form = YearFilterForm()
     threshold_date = datetime.now().date()
 
     return render(request, 'academic/see_assignments.html',
-                  {'form': form, 'assignments': assignments, 'user_name': user_name, 'selected_year': selected_year,
+                  {'form_subject': form_subject, 'assignments': assignments, 'user_name': user_name, 'form': form,
                    'threshold_date': threshold_date})
-
 def parent_view_assignments(request):
     user_name = request.user.username
     user_student = UserStudent.objects.get(parentUsername=request.user.username)
@@ -142,18 +141,19 @@ def parent_view_assignments(request):
     assignments = Assignment.objects.filter(student=student)
     selected_year = None
 
+    form_subject = SubjectFilterForm(request.POST or None)
+
     if request.method == 'POST':
-        form = YearFilterForm(request.POST)
-        if form.is_valid():
-            selected_year = form.cleaned_data['year']
-            if selected_year:
-                assignments = assignments.filter(year=selected_year)
+        if 'subject' in request.POST and form_subject.is_valid():
+            selected_subject = form_subject.cleaned_data['subject']
+            if selected_subject:
+                assignments = assignments.filter(subject=selected_subject)
 
     form = YearFilterForm()
     threshold_date = datetime.now().date()
 
     return render(request, 'academic/parent_view_assignments.html',
-                  {'form': form, 'assignments': assignments, 'user_name': user_name, 'selected_year': selected_year,
+                  {'form_subject': form_subject, 'assignments': assignments, 'user_name': user_name, 'selected_year': selected_year,
                    'threshold_date': threshold_date})
 
 
@@ -645,7 +645,7 @@ def list_students_for_assignments(request):
 
     # Paginate the students queryset
     page = request.GET.get('page')
-    paginator = Paginator(students, 5)
+    paginator = Paginator(students, 10)
     try:
         students_page = paginator.page(page)
     except PageNotAnInteger:
@@ -753,7 +753,7 @@ def teacher_exams_list_students(request, year_id, class_id, section_id, subject_
         studentsubject__subjectID=subject.subjectID
     ).order_by('fullName')  # Ensure the queryset is ordered
 
-    paginator = Paginator(students, 5)  # Show 2 students per page
+    paginator = Paginator(students, 10)  # Show 2 students per page
     page = request.GET.get('page')
 
     try:
@@ -903,7 +903,7 @@ def admin_record_attendenceII(request, year_id, class_id, section_id):
     ).order_by('fullName')  # Ensure the queryset is ordered
 
     # Pagination
-    paginator = Paginator(students, 5)  # Show 20 students per page
+    paginator = Paginator(students, 10)  # Show 20 students per page
     page = request.GET.get('page')
 
     try:

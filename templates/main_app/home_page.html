@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,10 +7,34 @@
     <title>{% block title %}User Profile{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-  <link rel="icon" type="image/png" href="{% static 'images/school.png' %}">
-
+    <link rel="icon" type="image/png' href="{% static 'images/school.png' %}">
 
     {% block another %} {% endblock %}
+    <style>
+        /* Custom styles for image container */
+        .image-container {
+            margin-top: 50px; /* Adjust margin as needed */
+            text-align: center; /* Center align the image */
+            position: relative; /* Enable positioning */
+        }
+
+        .image-container img {
+            max-width: 100%; /* Ensure image stays within container */
+            max-height: 100%; /* Ensure image stays within container */
+            border-radius: 10px; /* Optional: Rounded corners for the image */
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3); /* Optional: Box shadow for image */
+            animation: floatImage 5s ease-in-out infinite; /* Animation for floating effect */
+        }
+
+        @keyframes floatImage {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Adjust the floating distance */
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -50,19 +74,10 @@
             </div>
             <div class="presentation-area col mt-3 ml-2">
                 {% block content %}
-                        <div class="jumbotron">
-                        <h1 class="display-4">Welcome to SmartSchool Portal!</h1>
-                        <p class="lead">Empowering education through technology.</p>
-                        <hr class="my-4">
-                        <h2>Key Features:</h2>
-                        <ul>
-                            <li><strong>Simplify Administrative Tasks:</strong> Automate attendance monitoring, grade management, and class scheduling to eliminate manual intervention and save time.</li>
-                            <li><strong>Enhance Communication:</strong> Foster collaboration among administrators, teachers, students, and parents with robust features for remote engagement, diverse learning experiences, and open lines of communication.</li>
-                            <li><strong>Assist Educational Transformation:</strong> Support the ever-evolving educational landscape by providing an easily expandable and flexible solution aligned with emerging technology and teaching methods.</li>
-                            <li><strong>Support Parental Engagement:</strong> Promote meaningful parental engagement with immediate access to real-time updates on academic progress, attendance records, and communication with educators.</li>
-                            <li><strong>Improve Academic Experience:</strong> Enhance the educational journey for both instructors and learners with resources for efficient lesson preparation, material exchange, and collaborative learning experiences.</li>
-                        </ul>
-                        </div>
+                    <!-- Main content here -->
+                    <div class="image-container">
+                        <img src="{% static 'images/Picture1.png' %}" height="650" alt="System Image">
+                    </div>
                 {% endblock %}
             </div>
         </div>

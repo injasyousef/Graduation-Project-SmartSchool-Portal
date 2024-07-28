@@ -69,16 +69,28 @@ def send_parent_message(request):
         form = ParentSendMessageForm(user_parent=user_parent_username)
 
     return render(request, 'communication/parent_send_message.html', {'form': form})
-def view_messages(request):
-    student=UserStudent.objects.get(username=request.user.username)
+from django.db.models import Q
+from django.shortcuts import render
+from .models import UserStudent, Message
 
+def view_messages(request):
+    student = UserStudent.objects.get(username=request.user.username)
     messages = Message.objects.filter(receiverStudent=student).order_by('-date')
 
+    query = request.GET.get('q')
+    if query:
+        messages = messages.filter(
+            Q(senderEmployee__employee__fullName__icontains=query) |
+            Q(senderStudent__student__fullName__icontains=query)
+        )
+
     context = {
-        'messages': messages
+        'messages': messages,
+        'query': query
     }
 
-    return render(request, 'communication/student_view_messages.html',context)
+    return render(request, 'communication/student_view_messages.html', context)
+
 
 
 def message_details(request,message_id):
@@ -122,13 +134,24 @@ class DownloadFileViewInsert(View):
 
 
 
+from django.db.models import Q
+from django.shortcuts import render
+from .models import UserEmployee, Message
+
 def teacher_view_messages(request):
     teacher = UserEmployee.objects.get(username=request.user.username)
     messages = Message.objects.filter(receiverEmployee=teacher).order_by('-date')
 
+    query = request.GET.get('q')
+    if query:
+        messages = messages.filter(
+            Q(senderEmployee__employee__fullName__icontains=query) |
+            Q(senderStudent__student__fullName__icontains=query)
+        )
 
     context = {
         'messages': messages,
+        'query': query
     }
 
     return render(request, 'communication/teacher_view_messages.html', context)
@@ -190,7 +213,7 @@ def teacher_message_list_students(request, year_id, class_id, section_id, subjec
     ).order_by('fullName')  # Ensure the queryset is ordered
 
     # Paginate students
-    paginator = Paginator(students, 5)  # Show 2 students per page
+    paginator = Paginator(students, 10)  # Show 2 students per page
     page = request.GET.get('page')
 
     try:
@@ -298,16 +321,29 @@ def teacher_send_message_class(request,year_id,class_id,subject_id):
 
     return render(request, 'communication/teacher_send_message_class.html', context)
 
-def admin_view_messages(request):
-    admin=UserEmployee.objects.get(username=request.user.username)
+from django.db.models import Q
+from django.shortcuts import render
+from .models import UserEmployee, Message
 
+def admin_view_messages(request):
+    admin = UserEmployee.objects.get(username=request.user.username)
     messages = Message.objects.filter(receiverEmployee=admin).order_by('-date')
 
+    query = request.GET.get('q')
+    if query:
+        messages = messages.filter(
+            Q(senderEmployee__employee__fullName__icontains=query) |
+            Q(senderStudent__student__fullName__icontains=query) |
+            Q(senderParent__icontains=query)
+        )
+
     context = {
-        'messages': messages
+        'messages': messages,
+        'query': query
     }
 
-    return render(request, 'communication/admin_view_messages.html',context)
+    return render(request, 'communication/admin_view_messages.html', context)
+
 
 def admin_view_message_details(request,message_id):
     message = get_object_or_404(Message, pk=message_id)
@@ -438,7 +474,7 @@ def admin_message_list_students(request, year_id, class_id, section_id):
     ).order_by('fullName')  # Ensure the queryset is ordered
 
     # Pagination
-    paginator = Paginator(students, 5)  # Show 20 students per page
+    paginator = Paginator(students, 10)  # Show 20 students per page
     page = request.GET.get('page')
 
     try:

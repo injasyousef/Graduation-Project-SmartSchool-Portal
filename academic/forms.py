@@ -56,6 +56,9 @@ class GradeInsertionForm(forms.ModelForm):
             self.fields['section'].queryset = Section.objects.none()
             self.fields['subject'].queryset = Subject.objects.none()
 
+        self.fields['year'].widget = forms.HiddenInput()
+
+
 
 class NewAssForm(forms.ModelForm):
     class Meta:
@@ -166,6 +169,9 @@ class AttendenceForm(forms.ModelForm):
             self.fields['section'].queryset = Section.objects.filter(school_class_id=class_id).order_by('sectionSymbol')
         else:
             self.fields['section'].queryset = Section.objects.none()
+
+        self.fields['year'].widget = forms.HiddenInput()
+
 
 class AttendanceRecordForm(forms.ModelForm):
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
@@ -290,6 +296,8 @@ class StudentSelection(forms.ModelForm):
         else:
             self.fields['section'].queryset = Section.objects.none()
             self.fields['student'].queryset = Student.objects.none()
+        self.fields['year'].widget = forms.HiddenInput()
+
 
 class EmployeeSelectionForm(forms.Form):
     employee = forms.ModelChoiceField(queryset=Employee.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))

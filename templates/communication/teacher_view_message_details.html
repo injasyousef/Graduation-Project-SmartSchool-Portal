@@ -5,10 +5,7 @@
         <h2 class="card-title">Message Details</h2>
       </div>
       <div class="card-body">
-        <div class="mb-3">
-          <strong>Message Title:</strong>
-          <p>{{ message.title }}</p>
-        </div>
+
         <div class="mb-3">
               <p><strong>From: </strong>
                         {% if message.senderEmployee %}
@@ -20,17 +17,22 @@
                         {% endif %}
               </p>
         </div>
+         <div class="mb-3">
+          <strong>Date:</strong>
+          {{ message.date }}
+        </div>
+              <div class="mb-3">
+          <strong>Title:</strong>
+          {{ message.title }}
+        </div>
         <div class="mb-3">
-          <strong>Message Content:</strong>
+          <strong>Content:</strong>
           <p>{{ message.content }}</p>
         </div>
-        <div class="mb-3">
-          <strong>Message Date:</strong>
-          <p>{{ message.date }}</p>
-        </div>
+ 
         {% if message.file %}
         <div class="mb-3">
-          <strong>File:</strong>
+          <strong>Attachment:</strong>
           <p><a href="{% url 'communication:download_fileI' message.messageID %}" target="_blank">{{ message.file.name }}</a></p>
         </div>
         {% endif %}

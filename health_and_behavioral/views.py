@@ -118,7 +118,7 @@ def admin_behavioral_recordII(request, year_id, class_id, section_id):
     ).order_by('fullName')  # Ensure the queryset is ordered
 
     # Pagination
-    paginator = Paginator(students, 5)  # Show 20 students per page
+    paginator = Paginator(students, 10)  # Show 20 students per page
     page = request.GET.get('page')
 
     try:
@@ -330,7 +330,7 @@ def admin_health_recordII(request, year_id, class_id, section_id):
     ).order_by('fullName')  # Ensure the queryset is ordered
 
     # Pagination
-    paginator = Paginator(students, 5)  # Show 20 students per page
+    paginator = Paginator(students, 10)  # Show 20 students per page
     page = request.GET.get('page')
 
     try:

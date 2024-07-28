@@ -3,45 +3,39 @@
 {% block title %}View Assignments{% endblock %}
 
 {% block content %}
-    <!-- Filter Form -->
-    <div class="mb-4">
-        <form method="post" action="{% url 'academic:see_assignments' %}" class="form-inline">
-            {% csrf_token %}
-            <div class="form-group mr-2">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-primary">Filter by Year</button>
-        </form>
-    </div>
+    <h2 class="mb-4">Assignments</h2>
 
-    <h2 class="mb-4">Assignments filtered by Year for {{ user_name }} in {{ selected_year }}</h2>
+    <form method="post" action="{% url 'academic:see_assignments' %}" class="d-flex align-items-center" style="display: inline;">
+        {% csrf_token %}
+        <div class="mr-3">
+            {{ form_subject.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Filter by Subject</button>
+    </form>
 
-    <!-- Main Assignments Table -->
-    <div class="table-responsive">
+    <div class="table-responsive mt-2">
         {% if assignments %}
             <table class="table table-bordered table-striped">
                 <thead class="thead-light">
                     <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
                         <th>Title</th>
                         <th>Due Date</th>
-                        <th>Teacher</th>
-                        <th>Subject</th>
-                        <th>Class</th>
-                        <th>Assignment Grade</th>
-                        <th>Assignment Final Grade</th>
+                        <th>Student Grade</th>
+                        <th> Max Grade</th>
                         <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for assignment in assignments %}
                         <tr>
+                            <td>{{ assignment.subject.name }}</td>
+                            <td>{{ assignment.teacher.firstName }}</td>
                             <td>{{ assignment.title }}</td>
                             <td class="{% if assignment.submit and assignment.dueDate >= threshold_date %}text-primary{% elif  assignment.submit and assignment.dueDate < threshold_date %}text-success{% elif not assignment.submit and assignment.dueDate >= threshold_date %}text-warning{% else %}text-danger{% endif %}">
                                 {{ assignment.dueDate }}
                             </td>
-                            <td>{{ assignment.teacher.firstName }}</td>
-                            <td>{{ assignment.subject.name }}</td>
-                            <td>{{ assignment.school_class.className }}</td>
                             <td>{{ assignment.assignmentGrade }}</td>
                             <td>{{ assignment.assignmentFinalGrade }}</td>
                             <td>
@@ -52,11 +46,10 @@
                 </tbody>
             </table>
         {% else %}
-            <div class="alert alert-info">No assignments available for the selected year.</div>
+            <div class="alert alert-info">No assignments available for the selected subject.</div>
         {% endif %}
     </div>
 
-    <!-- Color Legends Table -->
     <div class="mt-5">
         <h3>Color Legends</h3>
         <table class="table table-bordered table-sm">

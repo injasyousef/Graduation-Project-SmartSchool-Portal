@@ -1,13 +1,20 @@
 {% extends 'main_app/student_page.html' %}
 
 {% block content %}
-    <h1>Your Messages</h1>
+    <h1>Messages</h1>
+
+    <form method="get" action="{% url 'communication:view_messages' %}" class="d-flex align-items-center mb-3">
+        <input type="text" name="q" class="form-control mr-2" placeholder="Search by sender name" value="{{ query }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>Message Title</th>
+                    <th>Title</th>
                     <th>Sender</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,11 +23,12 @@
                     <td><a href="{% url 'communication:message_details' message.messageID %}">{{ message.title }}</a></td>
                     <td> 
                         {% if message.senderEmployee %}
-                            {{ message.senderEmployee.employee.fullName}}
+                            {{ message.senderEmployee.employee.fullName }}
                         {% elif message.senderStudent %}
-                            {{ message.senderStudent.student.fullName}}
+                            {{ message.senderStudent.student.fullName }}
                         {% endif %}
                     </td>
+                    <td>{{ message.date }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

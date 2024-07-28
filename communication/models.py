@@ -18,7 +18,7 @@ class Message(models.Model):
 
 
     def __str__(self):
-        return self.title
+        return  self.title
 
 class Advertisement(models.Model):
     year = models.ForeignKey('academic.StudyYear', on_delete=models.CASCADE)

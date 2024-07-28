@@ -3,41 +3,39 @@
 {% block title %}View Health Records{% endblock %}
 
 {% block content %}
-        <!-- Filter Form -->
-        <form method="post" action="{% url 'health_and_behavioral:view_health_records' %}" class="form-inline mb-4">
-            {% csrf_token %}
-            <div class="form-group mr-2">
-                {{ form_year.as_p }}
-            </div>
-            <button type="submit" class="btn btn-primary">Filter by Year</button>
-        </form>
+{#        <!-- Filter Form -->#}
+{#        <form method="post" action="{% url 'health_and_behavioral:view_health_records' %}" class="form-inline mb-4">#}
+{#            {% csrf_token %}#}
+{#            <div class="form-group mr-2">#}
+{#                {{ form_year.as_p }}#}
+{#            </div>#}
+{#            <button type="submit" class="btn btn-primary">Filter by Year</button>#}
+{#        </form>#}
 
         {% block content_health_records %}
-            <h2 class="mb-4">All Health Records for All Years</h2>
+            <h2 class="mb-4"> Health Records</h2>
             <div class="table-responsive">
                 {% if health_records %}
                     <table class="table table-bordered table-striped">
                         <thead class="thead-light">
                             <tr>
-                                <th>Year</th>
-                                <th>Class</th>
-                                <th>Section</th>
-                                <th>Diagnosis</th>
-                                <th>Action</th>
-                                <th>Date</th>
                                 <th>Description</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Notes</th>
+                                <th>Parents Have Been Contacted</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             {% for record in health_records %}
                                 <tr>
-                                    <td>{{ record.year }}</td>
-                                    <td>{{ record.school_class.className }}</td>
-                                    <td>{{ record.section.sectionSymbol }}</td>
                                     <td>{{ record.diagnosis }}</td>
-                                    <td>{{ record.action }}</td>
                                     <td>{{ record.date }}</td>
+                                    <td>{{ record.action }}</td>
                                     <td>{{ record.description }}</td>
+                                    <td>{{ record.parentsHaveBeenContacted }}</td>
+
                                 </tr>
                             {% endfor %}
                         </tbody>

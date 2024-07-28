@@ -3,19 +3,15 @@
 {% block title %}View Assignments{% endblock %}
 
 {% block content %}
-    <!-- Filter Form -->
-    <div class="mb-4">
-        <form method="post" action="{% url 'academic:parent_view_assignments' %}" class="form-inline">
-            {% csrf_token %}
-            <div class="form-group mr-2">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-primary">Filter by Year</button>
-        </form>
-    </div>
 
     <h2 class="mb-4">Assignments</h2>
-
+    <form method="post" action="{% url 'academic:parent_view_assignments' %}" class="d-flex align-items-center" style="display: inline;">
+        {% csrf_token %}
+        <div class="mr-3">
+            {{ form_subject.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Filter by Subject</button>
+    </form>
     <!-- Main Assignments Table -->
     <div class="table-responsive">
         {% if assignments %}

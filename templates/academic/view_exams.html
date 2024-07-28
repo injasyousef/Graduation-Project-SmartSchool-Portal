@@ -4,24 +4,27 @@
 {% block title %}View Grades{% endblock %}
 
 {% block content %}
-    <form method="post" action="{% url 'academic:view_exams' %}" style="display: inline;">
-        {% csrf_token %}
+            <h2>Exams </h2>
+
+<form method="post" action="{% url 'academic:view_exams' %}" class="d-flex align-items-center" style="display: inline;">
+    {% csrf_token %}
+    <div class="mr-2">
         {{ form_subject.as_p }}
-        <button type="submit" class="btn btn-primary mb-5">Filter by Subject</button>
-    </form>
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Filter by Subject</button>
+</form>
+
 
     {% block content_exams %}
-        <h2>All exams for All Subjects </h2>
         {% if exams %}
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
         <tr>
             <th>Subject</th>
-            <th>Year</th>
-            <th>Exam Title</th>
-            <th>Exam date</th>
-            <th>Exam Grade</th>
-            <th>Exam Final Grade</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Student Grade</th>
+            <th>Max Grade</th>
             <th>Teacher</th>
         </tr>
     </thead>
@@ -29,7 +32,6 @@
         {% for exam in exams %}
         <tr>
             <td>{{ exam.subject.name }}</td>
-            <td>{{ exam.year.yearName }}</td>
             <td>{{ exam.title }}</td>
             <td>{{ exam.date }}</td>
             <td>{{ exam.examGrade }}</td>
